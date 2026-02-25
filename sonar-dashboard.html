@@ -669,13 +669,13 @@ const ctx = canvas.getContext('2d', { alpha: false });
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
-// Speed constants for different object types
-const SPEED_SUBMARINE_MIN = 0.5;
-const SPEED_SUBMARINE_MAX = 1.8;
-const SPEED_SHIP_MIN = 1.0;
-const SPEED_SHIP_MAX = 3.5;
-const SPEED_AIRPLANE_MIN = 4.0;
-const SPEED_AIRPLANE_MAX = 9.0;
+// Speed constants for different object types (reduced by 50% as requested)
+const SPEED_SUBMARINE_MIN = 0.25;
+const SPEED_SUBMARINE_MAX = 0.9;
+const SPEED_SHIP_MIN = 0.5;
+const SPEED_SHIP_MAX = 1.75;
+const SPEED_AIRPLANE_MIN = 2.0;
+const SPEED_AIRPLANE_MAX = 4.5;
 
 // Helper function to get random speed for object type
 function getRandomSpeed(objectType) {
