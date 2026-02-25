@@ -669,16 +669,48 @@ const ctx = canvas.getContext('2d', { alpha: false });
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
+// Speed constants for different object types
+const SPEED_SUBMARINE_MIN = 0.5;
+const SPEED_SUBMARINE_MAX = 1.8;
+const SPEED_SHIP_MIN = 1.0;
+const SPEED_SHIP_MAX = 3.5;
+const SPEED_AIRPLANE_MIN = 4.0;
+const SPEED_AIRPLANE_MAX = 9.0;
+
+// Helper function to get random speed for object type
+function getRandomSpeed(objectType) {
+  let min, max;
+  
+  switch (objectType) {
+    case 'submarine':
+      min = SPEED_SUBMARINE_MIN;
+      max = SPEED_SUBMARINE_MAX;
+      break;
+    case 'ship':
+      min = SPEED_SHIP_MIN;
+      max = SPEED_SHIP_MAX;
+      break;
+    case 'airplane':
+      min = SPEED_AIRPLANE_MIN;
+      max = SPEED_AIRPLANE_MAX;
+      break;
+    default:
+      min = SPEED_SUBMARINE_MIN;
+      max = SPEED_SUBMARINE_MAX;
+  }
+  
+  return Math.random() * (max - min) + min;
+}
+
 // State variables
 let contacts = [
   { 
     id: 'GOBLIN-1', 
     x: 340, 
     y: 150, 
-    speed: 0.75, 
+    type: 'submarine',
     angle: Math.PI / 4, 
     depth: 50,
-    type: 'friendly',
     color: '#00ff41',
     trail: [],
     lastInSweep: false,
@@ -688,11 +720,22 @@ let contacts = [
     id: 'SKUNK-2', 
     x: 580, 
     y: 400, 
-    speed: 0.6, 
+    type: 'ship',
     angle: -Math.PI / 3, 
     depth: 200,
-    type: 'hostile',
     color: '#ff2020',
+    trail: [],
+    lastInSweep: false,
+    undetectedFrames: 0
+  },
+  { 
+    id: 'EAGLE-7', 
+    x: 150, 
+    y: 300, 
+    type: 'airplane',
+    angle: Math.PI / 2, 
+    depth: 400,
+    color: '#ffaa00',
     trail: [],
     lastInSweep: false,
     undetectedFrames: 0
@@ -982,7 +1025,7 @@ function addGhostBlip(contact, angleFromCenter, dist) {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
-    const ghostDist = Math.max(50, dist - (contact.speed * 3));
+    const ghostDist = Math.max(50, dist - (getRandomSpeed(contact.type) * 3));
     const ghostX = centerX + Math.cos(angleFromCenter) * ghostDist;
     const ghostY = centerY + Math.sin(angleFromCenter) * ghostDist;
 
@@ -1185,12 +1228,12 @@ function drawContacts() {
       contact.trail.push({ x: contact.x, y: contact.y });
       if (contact.trail.length > MAX_TRAIL_LENGTH) contact.trail.shift();
 
-      // Move contact with realistic speed
-      let currentSpeed = contact.speed;
-      if (contact.depth > 50) {
-        currentSpeed = Math.max(0.3, Math.min(2.0, contact.speed));
-      } else {
-        currentSpeed = Math.max(0.8, Math.min(4.0, contact.speed));
+      // Get speed based on object type
+      let currentSpeed = getRandomSpeed(contact.type);
+      
+      // Depth affects speed (submarines move slower at depth)
+      if (contact.depth > 100 && contact.type === 'submarine') {
+        currentSpeed *= 0.7; // Submarines are slower at greater depths
       }
 
       contact.x += Math.cos(contact.angle) * currentSpeed;
@@ -1253,11 +1296,16 @@ function drawContacts() {
         addGhostBlip(contact, angleFromCenter, distPx);
         playSonarPing(bearingFromNorth, currentSpeed);
 
-        // Log contact detection
-        if (contact.type === 'hostile') {
-          addLogEntry(`${contact.id} detected at bearing ${Math.round(angleFromCenter * 180/Math.PI)}°.`, 'hostile');
+        // Log contact detection with type information
+        let typeLabel = 'unknown';
+        if (contact.type === 'submarine') typeLabel = 'SUBMARINE';
+        else if (contact.type === 'ship') typeLabel = 'SHIP';
+        else if (contact.type === 'airplane') typeLabel = 'AIRPLANE';
+        
+        if (contact.color === '#ff2020') {
+          addLogEntry(`${typeLabel} ${contact.id} detected at bearing ${Math.round(angleFromCenter * 180/Math.PI)}°.`, 'hostile');
         } else {
-          addLogEntry(`${contact.id} detected at bearing ${Math.round(angleFromCenter * 180/Math.PI)}°.`, 'friendly');
+          addLogEntry(`${typeLabel} ${contact.id} detected at bearing ${Math.round(angleFromCenter * 180/Math.PI)}°.`, 'friendly');
         }
       }
 
@@ -1304,8 +1352,14 @@ function drawContacts() {
         const rangeNm = Math.round(distPx / 5);
         const bearingDeg = Math.round(angleFromCenter * (180/Math.PI));
 
+        // Add speed info to label
+        let speedLabel = '';
+        if (contact.type === 'submarine') speedLabel = ` S:${currentSpeed.toFixed(1)}kts SUB`;
+        else if (contact.type === 'ship') speedLabel = ` S:${currentSpeed.toFixed(1)}kts SHIP`;
+        else if (contact.type === 'airplane') speedLabel = ` S:${currentSpeed.toFixed(1)}kts AIR`;
+        
         const depthInfo = contact.depth > 0 ? ` D:${contact.depth}m` : '';
-        ctx.fillText(`${contact.id} R:${rangeNm}nm B:${bearingDeg}${depthInfo}`, contact.x + 10, contact.y - 8);
+        ctx.fillText(`${contact.id}${speedLabel} R:${rangeNm}nm B:${bearingDeg}${depthInfo}`, contact.x + 10, contact.y - 8);
       }
 
       // Update latest contact info
