@@ -1,32 +1,81 @@
-// Speed constants for different object types (reduced by 75% total from original)
-const SPEED_SUBMARINE_MIN = 0.125;
-const SPEED_SUBMARINE_MAX = 0.45;
-const SPEED_SHIP_MIN = 0.25;
-const SPEED_SHIP_MAX = 0.875;
-const SPEED_AIRPLANE_MIN = 1.0;
-const SPEED_AIRPLANE_MAX = 2.25;
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Aged paper aesthetic */
+    body { 
+      background: #1a1510; /* Dark leather briefcase interior */
+      font-family: 'Courier New', monospace;
+    }
+    
+    .briefcase {
+      width: 900px;
+      height: 600px;
+      background: linear-gradient(#d4c5a3, #b8a887); /* Aged paper */
+      border: 8px solid #5c4a35; /* Leather binding */
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    }
+    
+    .paper-section {
+      border: 1px dashed #6b5d48; /* Sewn paper edges */
+      padding: 15px;
+      margin: 10px;
+    }
+    
+    .metric-bar {
+      letter-spacing: 3px;
+    }
+    
+    .timer-overlay {
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #d4c5a3;
+      border: 3px solid #8b0000; /* Red border for urgency */
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="briefcase">
+    <!-- Status Report Section -->
+    <div class="paper-section" id="status-report"></div>
+    
+    <!-- Contacts Section -->
+    <div class="paper-section" id="contacts"></div>
+    
+    <!-- Inventory Section -->
+    <div class="paper-section" id="inventory"></div>
+    
+    <!-- Command Line / Game Output -->
+    <div class="paper-section" id="command-line"></div>
+  </div>
 
-// Helper function to get random speed for object type
-function getRandomSpeed(objectType) {
-  let min, max;
-  
-  switch (objectType) {
-    case 'submarine':
-      min = SPEED_SUBMARINE_MIN;
-      max = SPEED_SUBMARINE_MAX;
-      break;
-    case 'ship':
-      min = SPEED_SHIP_MIN;
-      max = SPEED_SHIP_MAX;
-      break;
-    case 'airplane':
-      min = SPEED_AIRPLANE_MIN;
-      max = SPEED_AIRPLANE_MAX;
-      break;
-    default:
-      min = SPEED_SUBMARINE_MIN;
-      max = SPEED_SUBMARINE_MAX;
-  }
-  
-  return Math.random() * (max - min) + min;
-}
+  <script>
+    // Game state
+    const gameState = {
+      health: 75,
+      alertLevel: 'MODERATE',
+      timeRemaining: 4320, // seconds (72 hours)
+      actionPoints: 5,
+      contacts: [
+        { name: 'Café Owner', trust: 60 },
+        { name: 'Resistance Fighter', trust: 40 },
+        { name: 'German Clerk', trust: 20 }
+      ],
+      inventory: ['Code Book (Morse)', 'Fake ID', 'Camera', 'Map of Peenemünde']
+    };
+
+    // Update paper metrics function
+    function updatePaperMetrics() {
+      // Updates health bars, trust levels, etc. in place
+    }
+
+    // Morse code puzzle function
+    function startMorsePuzzle() {
+      // Opens 60-second countdown interface
+    }
+  </script>
+</body>
+</html>
