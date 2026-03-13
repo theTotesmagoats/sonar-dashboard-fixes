@@ -1,81 +1,1317 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Intelligence Network — Agent Falcon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Aged paper aesthetic */
-    body { 
-      background: #1a1510; /* Dark leather briefcase interior */
-      font-family: 'Courier New', monospace;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    
+
+    body {
+      background: linear-gradient(135deg, #1a120b 0%, #2d1f14 100%);
+      font-family: 'Courier Prime', monospace;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Briefcase Container */
     .briefcase {
-      width: 900px;
-      height: 600px;
-      background: linear-gradient(#d4c5a3, #b8a887); /* Aged paper */
-      border: 8px solid #5c4a35; /* Leather binding */
-      box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+      width: 950px;
+      min-height: 650px;
+      background: linear-gradient(180deg, #d4c5a3 0%, #b8a887 50%, #9e8f72 100%);
+      border-radius: 15px;
+      box-shadow: 
+        0 20px 60px rgba(0,0,0,0.7),
+        inset 0 0 80px rgba(0,0,0,0.3),
+        inset 5px 5px 15px rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
     }
-    
-    .paper-section {
-      border: 1px dashed #6b5d48; /* Sewn paper edges */
-      padding: 15px;
-      margin: 10px;
+
+    /* Leather binding effect */
+    .briefcase::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 15px;
+      border: 12px solid #5c4a35;
+      pointer-events: none;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
     }
-    
-    .metric-bar {
-      letter-spacing: 3px;
-    }
-    
-    .timer-overlay {
-      position: fixed;
-      top: 20%;
+
+    /* Metal clasps */
+    .clasp {
+      position: absolute;
+      top: -15px;
       left: 50%;
       transform: translateX(-50%);
-      background: #d4c5a3;
-      border: 3px solid #8b0000; /* Red border for urgency */
+      width: 80px;
+      height: 30px;
+      background: linear-gradient(90deg, #8b7355, #a68b6c, #8b7355);
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    /* Paper texture overlay */
+    .paper-texture {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 25px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header h1 {
+      font-family: 'Special Elite', cursive;
+      color: #3d2817;
+      font-size: 24px;
+      letter-spacing: 2px;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+    }
+
+    .header .subtitle {
+      font-family: 'Courier Prime', monospace;
+      color: #5c4a35;
+      font-size: 12px;
+      margin-top: 8px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Main content area */
+    .content {
+      display: flex;
+      gap: 20px;
+      padding: 30px 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Left panel - Status */
+    .left-panel {
+      width: 45%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Right panel - Main display */
+    .right-panel {
+      width: 55%;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 
+        inset 0 2px 10px rgba(0,0,0,0.1),
+        0 2px 5px rgba(255,255,255,0.05);
+    }
+
+    /* Paper sections */
+    .paper-section {
+      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
+      border-radius: 5px;
       padding: 20px;
+      box-shadow: 
+        0 2px 8px rgba(0,0,0,0.15),
+        inset 0 1px 3px rgba(255,255,255,0.4);
+      position: relative;
+    }
+
+    .paper-section::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 10%;
+      right: 10%;
+      height: 12px;
+      background: #c9a76c;
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-family: 'Special Elite', cursive;
+      color: #3d2817;
+      font-size: 14px;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(61, 40, 23, 0.2);
+    }
+
+    /* Metrics */
+    .metric {
+      margin-bottom: 12px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: #5c4a35;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .metric-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .metric-bar {
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: #3d2817;
+    }
+
+    .metric-value {
+      font-size: 12px;
+      color: #5c4a35;
+      min-width: 50px;
+    }
+
+    /* Alert level styling */
+    .alert-level {
+      padding: 8px 12px;
+      border-radius: 3px;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .alert-low {
+      background: #d4e6c3;
+      color: #3a5c28;
+    }
+
+    .alert-moderate {
+      background: #f0d787;
+      color: #7a5c12;
+    }
+
+    .alert-high {
+      background: #e6b4b4;
+      color: #5c2828;
+    }
+
+    /* Contacts */
+    .contact-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .contact-item:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateX(3px);
+    }
+
+    .contact-name {
+      font-size: 12px;
+      color: #3d2817;
+    }
+
+    .trust-bar {
+      display: flex;
+      gap: 2px;
+    }
+
+    .trust-block {
+      width: 10px;
+      height: 14px;
+      border-radius: 2px;
+      background: #9e8f72;
+      transition: background 0.3s;
+    }
+
+    .trust-filled {
+      background: linear-gradient(180deg, #6b5d48 0%, #5c4a35 100%);
+    }
+
+    /* Inventory */
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .item {
+      padding: 12px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+      font-size: 11px;
+      color: #3d2817;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .item:hover {
+      background: rgba(255,255,255,0.6);
+      transform: translateY(-2px);
+    }
+
+    .item-icon {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    /* Main display area */
+    .display-area {
+      min-height: 300px;
+      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .display-line {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #3d2817;
+      margin-bottom: 8px;
+    }
+
+    .display-line.typing::after {
+      content: '█';
+      animation: blink 0.8s infinite;
+      color: #5c4a35;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: linear-gradient(180deg, #5c4a35 0%, #4a3b29 100%);
+      color: #e8d4b8;
+      border: none;
+      border-radius: 5px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover {
+      background: linear-gradient(180deg, #6b5d48 0%, #5c4a35 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(180deg, #a63c3c 0%, #7a2828 100%);
+    }
+
+    .btn-success {
+      background: linear-gradient(180deg, #5a7a3c 0%, #425c28 100%);
+    }
+
+    /* Morse code display */
+    .morse-display {
+      font-family: 'Special Elite', cursive;
+      font-size: 28px;
+      letter-spacing: 8px;
+      text-align: center;
+      padding: 30px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 5px;
+      margin-bottom: 20px;
+      color: #3d2817;
+    }
+
+    .morse-dot {
+      color: #6b5d48;
+    }
+
+    .morse-dash {
+      color: #5c4a35;
+    }
+
+    /* Timer overlay */
+    .timer-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
+      border: 4px solid #a63c3c;
+      padding: 30px 50px;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      z-index: 1000;
+    }
+
+    .timer-display {
+      font-family: 'Special Elite', cursive;
+      font-size: 48px;
+      color: #a63c3c;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .timer-label {
+      text-align: center;
+      font-size: 12px;
+      color: #5c4a35;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
+      border-radius: 10px;
+      padding: 30px;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    }
+
+    .modal-title {
+      font-family: 'Special Elite', cursive;
+      color: #3d2817;
+      font-size: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Stamp effect */
+    .stamp {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      border: 3px solid #a63c3c;
+      color: #a63c3c;
+      padding: 5px 15px;
+      font-family: 'Special Elite', cursive;
+      font-size: 14px;
+      letter-spacing: 2px;
+      transform: rotate(-10deg);
+      opacity: 0.8;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #5c4a35;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #9e8f72;
+      border-radius: 4px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    /* Screen transitions */
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* Code book reference */
+    .code-book {
+      background: rgba(255,255,255,0.3);
+      border-radius: 5px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .morse-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      font-size: 11px;
+      color: #3d2817;
+    }
+
+    .morse-entry {
+      text-align: center;
+      padding: 5px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+    }
+
+    /* Action points */
+    .action-points {
+      display: flex;
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .ap-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #9e8f72;
+    }
+
+    .ap-filled {
+      background: linear-gradient(135deg, #6b5d48 0%, #5c4a35 100%);
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
+      border-left: 4px solid #5c4a35;
+      padding: 15px 25px;
+      border-radius: 5px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      z-index: 1001;
+      font-size: 12px;
+      color: #3d2817;
+    }
+
+    .notification.success {
+      border-left-color: #5a7a3c;
+    }
+
+    .notification.error {
+      border-left-color: #a63c3c;
+    }
+
+    /* Debrief scores */
+    .score-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(61, 40, 23, 0.2);
+    }
+
+    .score-value {
+      font-weight: bold;
+      color: #5c4a35;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .briefcase {
+        width: 100%;
+        min-height: auto;
+      }
+
+      .content {
+        flex-direction: column;
+        padding: 20px;
+      }
+
+      .left-panel, .right-panel {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="briefcase">
-    <!-- Status Report Section -->
-    <div class="paper-section" id="status-report"></div>
-    
-    <!-- Contacts Section -->
-    <div class="paper-section" id="contacts"></div>
-    
-    <!-- Inventory Section -->
-    <div class="paper-section" id="inventory"></div>
-    
-    <!-- Command Line / Game Output -->
-    <div class="paper-section" id="command-line"></div>
+    <div class="clasp"></div>
+    <div class="paper-texture"></div>
+
+    <!-- Header -->
+    <div class="header">
+      <h1>OPERATION FALCON</h1>
+      <div class="subtitle">Agent Dossier — Classified</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <!-- Status Report -->
+        <div class="paper-section">
+          <h3 class="section-title">★ STATUS REPORT</h3>
+          
+          <div class="metric">
+            <div class="metric-label">Agent Health</div>
+            <div class="metric-bar-container">
+              <span class="metric-bar" id="health-bar">█████░░░░░</span>
+              <span class="metric-value" id="health-value">50%</span>
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Action Points</div>
+            <div class="action-points" id="ap-dots">
+              <div class="ap-dot ap-filled"></div>
+              <div class="ap-dot ap-filled"></div>
+              <div class="ap-dot ap-filled"></div>
+              <div class="ap-dot ap-filled"></div>
+              <div class="ap-dot ap-filled"></div>
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Time Remaining</div>
+            <div style="font-size: 14px; color: #3d2817;" id="time-display">72:00:00</div>
+          </div>
+
+          <div class="alert-level alert-moderate" id="alert-level">
+            ⚠ MODERATE — Patrol spotted N. Paris
+          </div>
+        </div>
+
+        <!-- Contacts -->
+        <div class="paper-section">
+          <h3 class="section-title">★ CONTACTS</h3>
+          <div id="contacts-list"></div>
+        </div>
+
+        <!-- Inventory -->
+        <div class="paper-section">
+          <h3 class="section-title">★ INVENTORY</h3>
+          <div class="inventory-grid" id="inventory-grid"></div>
+        </div>
+      </div>
+
+      <!-- Right Panel (Main Display) -->
+      <div class="right-panel">
+        <!-- Screens will be swapped here -->
+        <div id="screen-briefing" class="screen active">
+          <div class="display-area">
+            <div class="stamp">CONFIDENTIAL</div>
+            <h2 style="text-align: center; margin-bottom: 20px;">MISSION BRIEFING</h2>
+            
+            <div id="briefing-text"></div>
+
+            <div class="btn-group">
+              <button class="btn" onclick="game.startMission()">ACCEPT MISSION</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-contacts" class="screen">
+          <div class="display-area">
+            <h2 style="text-align: center; margin-bottom: 20px;">CONTACT NETWORK</h2>
+            
+            <div id="contact-interactions"></div>
+            
+            <div class="btn-group">
+              <button class="btn" onclick="game.showScreen('screen-briefing')">BACK TO DOSSIER</button>
+              <button class="btn btn-success" onclick="game.nextPhase()">NEXT PHASE</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-puzzle" class="screen">
+          <div class="display-area">
+            <h2 style="text-align: center; margin-bottom: 15px;">RADIO INTERCEPT</h2>
+            
+            <div class="morse-display" id="morse-display"></div>
+            
+            <div id="puzzle-controls">
+              <div class="btn-group">
+                <button class="btn" onclick="game.openCodeBook()">OPEN CODE BOOK</button>
+                <button class="btn btn-success" onclick="game.solveMyself()">SOLVE MYSELF</button>
+                <button class="btn btn-danger" onclick="game.callContactForHelp()">CALL CONTACT (-15 TRUST)</button>
+              </div>
+            </div>
+
+            <div id="code-book-modal" style="display: none; margin-top: 20px;">
+              <h3 style="text-align: center; margin-bottom: 15px;">MORSE CODE REFERENCE</h3>
+              <div class="morse-grid">
+                <div class="morse-entry">A •—</div>
+                <div class="morse-entry">B —•••</div>
+                <div class="morse-entry">C —•—•</div>
+                <div class="morse-entry">D —••</div>
+                <div class="morse-entry">E •</div>
+                <div class="morse-entry">F ••—•</div>
+                <div class="morse-entry">G ——•</div>
+                <div class="morse-entry">H ••••</div>
+                <div class="morse-entry">I ••</div>
+                <div class="morse-entry">J •———</div>
+                <div class="morse-entry">K —•—</div>
+                <div class="morse-entry">L •—••</div>
+                <div class="morse-entry">M ——</div>
+                <div class="morse-entry">N —•</div>
+                <div class="morse-entry">O ——–</div>
+                <div class="morse-entry">P •———•</div>
+                <div class="morse-entry">R •—•</div>
+                <div class="morse-entry">S •••</div>
+                <div class="morse-entry">T —</div>
+                <div class="morse-entry">U ••—</div>
+              </div>
+            </div>
+
+            <!-- Morse Input Interface (hidden until solve selected) -->
+            <div id="morse-input" style="display: none; margin-top: 20px;">
+              <h4 style="text-align: center; margin-bottom: 10px;">DECODE LETTER BY LETTER</h4>
+              <div class="morse-grid">
+                <button class="btn" onclick="game.addMorseSymbol('dot')">• DOT</button>
+                <button class="btn" onclick="game.addMorseSymbol('dash')">— DASH</button>
+                <button class="btn btn-success" onclick="game.submitLetter()">SUBMIT LETTER</button>
+                <button class="btn btn-danger" onclick="game.clearCurrentLetter()">CLEAR</button>
+              </div>
+              <div style="text-align: center; margin-top: 15px;">
+                Current: <span id="current-morse">_</span><br>
+                Decoded: <span id="decoded-text" style="font-weight: bold;"></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="screen-debrief" class="screen">
+          <div class="display-area">
+            <h2 style="text-align: center; margin-bottom: 10px;">MISSION DEBRIEF</h2>
+            
+            <div class="stamp" style="top: 30px;">COMPLETED</div>
+
+            <div id="debrief-content"></div>
+
+            <div class="btn-group">
+              <button class="btn" onclick="game.saveGame()">SAVE DOSSIER</button>
+              <button class="btn btn-success" onclick="game.startNewMission()">NEXT MISSION</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
+  <!-- Timer Modal -->
+  <div id="timer-modal" class="modal-overlay" style="display: none;">
+    <div class="timer-overlay">
+      <div class="timer-display" id="timer-countdown">60</div>
+      <div class="timer-label">GESTAPO APPROACHING</div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div id="notification" class="notification"></div>
+
   <script>
-    // Game state
-    const gameState = {
-      health: 75,
-      alertLevel: 'MODERATE',
-      timeRemaining: 4320, // seconds (72 hours)
-      actionPoints: 5,
-      contacts: [
-        { name: 'Café Owner', trust: 60 },
-        { name: 'Resistance Fighter', trust: 40 },
-        { name: 'German Clerk', trust: 20 }
-      ],
-      inventory: ['Code Book (Morse)', 'Fake ID', 'Camera', 'Map of Peenemünde']
-    };
+    // ============================================
+    // GAME ENGINE
+    // ============================================
 
-    // Update paper metrics function
-    function updatePaperMetrics() {
-      // Updates health bars, trust levels, etc. in place
-    }
+    const Game = function() {
+      // State
+      let state = {
+        currentScreen: 'screen-briefing',
+        phase: 0,
+        health: 50,
+        actionPoints: 5,
+        maxActionPoints: 5,
+        timeRemaining: 259200, // 72 hours in seconds
+        alertLevel: 'MODERATE',
+        contacts: [
+          { name: 'Café Owner', trust: 60 },
+          { name: 'Resistance Fighter', trust: 40 },
+          { name: 'German Clerk', trust: 20 }
+        ],
+        inventory: [
+          { name: 'Code Book (Morse)', icon: '📖' },
+          { name: 'Fake ID: Pierre', icon: '🆔' },
+          { name: 'Camera', icon: '📷' },
+          { name: 'Map Peenemünde', icon: '🗺️' }
+        ],
+        missionData: {
+          targetConfirmed: false,
+          dateConfirmed: false,
+          scientistName: '',
+          launchDate: ''
+        },
+        currentMorseCode: '',
+        decodedMessage: '',
+        timerId: null,
+        timeLeft: 60
+      };
 
-    // Morse code puzzle function
-    function startMorsePuzzle() {
-      // Opens 60-second countdown interface
-    }
+      // Morse code to letters mapping
+      const morseMap = {
+        '•': 'E', '—': 'T',
+        '••': 'I', '——': 'M',
+        '•—': 'A', '—•': 'N',
+        '•••': 'S', '———': 'O',
+        '••—': 'U', '——•': 'W',
+        '•—•': 'R', '—•—': 'K',
+        '••—•': 'F', '—••—': 'Y',
+        '•——•': 'L', '—•••': 'B',
+        '•—••': 'J', '•———': 'V',
+        '——••': 'D', '———•': 'C',
+        '———–': 'G', '•———•': 'P'
+      };
+
+      // Mission messages
+      const missionMessages = [
+        "OPERATION FALCON — MISSION BRIEFING",
+        "",
+        "Agent Falcon, London HQ here.",
+        "",
+        "INTEL: German V-2 rocket program at Peenemünde.",
+        "CONFIRM: Lead scientist & launch schedule.",
+        "",
+        "YOUR NETWORK is your greatest asset.",
+        "Build trust. Gather intel. Extract safely.",
+        "",
+        "You have 72 hours before the launch window.",
+        "Gestapo patrols are active in Paris.",
+        "",
+        "Good luck, Agent."
+      ];
+
+      // ============================================
+      // INITIALIZATION
+      // ============================================
+
+      function init() {
+        loadGame();
+        renderAll();
+        startMissionTimer();
+      }
+
+      // ============================================
+      // RENDERING
+      // ============================================
+
+      function renderHealth() {
+        const healthBar = document.getElementById('health-bar');
+        const healthValue = document.getElementById('health-value');
+        
+        const filled = Math.floor(state.health / 10);
+        const empty = 10 - filled;
+        
+        let bar = '';
+        for (let i = 0; i < filled; i++) bar += '█';
+        for (let i = 0; i < empty; i++) bar += '░';
+        
+        healthBar.textContent = bar;
+        healthValue.textContent = state.health + '%';
+      }
+
+      function renderActionPoints() {
+        const apDots = document.getElementById('ap-dots');
+        apDots.innerHTML = '';
+        
+        for (let i = 0; i < state.maxActionPoints; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'ap-dot' + (i < state.actionPoints ? ' ap-filled' : '');
+          apDots.appendChild(dot);
+        }
+      }
+
+      function renderTime() {
+        const hours = Math.floor(state.timeRemaining / 3600);
+        const minutes = Math.floor((state.timeRemaining % 3600) / 60);
+        const seconds = state.timeRemaining % 60;
+        
+        document.getElementById('time-display').textContent = 
+          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+
+      function renderAlertLevel() {
+        const alertEl = document.getElementById('alert-level');
+        
+        alertEl.className = 'alert-level';
+        if (state.alertLevel === 'LOW') {
+          alertEl.classList.add('alert-low');
+          alertEl.textContent = '✓ LOW — Area appears secure';
+        } else if (state.alertLevel === 'MODERATE') {
+          alertEl.classList.add('alert-moderate');
+          alertEl.textContent = '⚠ MODERATE — Patrol spotted N. Paris';
+        } else {
+          alertEl.classList.add('alert-high');
+          alertEl.textContent = '❗ HIGH — RAID IMMINENT!';
+        }
+      }
+
+      function renderContacts() {
+        const container = document.getElementById('contacts-list');
+        container.innerHTML = '';
+        
+        state.contacts.forEach((contact, index) => {
+          const div = document.createElement('div');
+          div.className = 'contact-item';
+          
+          // Trust blocks
+          let trustBlocks = '';
+          const filled = Math.floor(contact.trust / 20);
+          for (let i = 0; i < 5; i++) {
+            trustBlocks += `<span class="trust-block${i < filled ? ' trust-filled' : ''}"></span>`;
+          }
+          
+          div.innerHTML = `
+            <span class="contact-name">${contact.name}</span>
+            <div class="trust-bar">${trustBlocks}</div>
+          `;
+          
+          div.onclick = () => interactWithContact(index);
+          container.appendChild(div);
+        });
+      }
+
+      function renderInventory() {
+        const grid = document.getElementById('inventory-grid');
+        grid.innerHTML = '';
+        
+        state.inventory.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.innerHTML = `
+            <div class="item-icon">${item.icon}</div>
+            <div>${item.name}</div>
+          `;
+          
+          div.onclick = () => showNotification(`Using: ${item.name}`, 'success');
+          grid.appendChild(div);
+        });
+      }
+
+      function renderAll() {
+        renderHealth();
+        renderActionPoints();
+        renderTime();
+        renderAlertLevel();
+        renderContacts();
+        renderInventory();
+      }
+
+      // ============================================
+      // SCREEN MANAGEMENT
+      // ============================================
+
+      function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        state.currentScreen = screenId;
+      }
+
+      function typeText(text, elementId, callback) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = '';
+        
+        let lineIndex = 0;
+        const lines = text.split('\n');
+        
+        function showNextLine() {
+          if (lineIndex < lines.length) {
+            const line = document.createElement('div');
+            line.className = 'display-line typing';
+            element.appendChild(line);
+            
+            let charIndex = 0;
+            const currentLine = lines[lineIndex];
+            
+            function typeChar() {
+              if (charIndex < currentLine.length) {
+                line.textContent = currentLine.substring(0, charIndex + 1);
+                charIndex++;
+                setTimeout(typeChar, 30);
+              } else {
+                line.classList.remove('typing');
+                lineIndex++;
+                setTimeout(showNextLine, 200);
+              }
+            }
+            
+            typeChar();
+          } else if (callback) {
+            callback();
+          }
+        }
+        
+        showNextLine();
+      }
+
+      // ============================================
+      // GAMEPLAY FUNCTIONS
+      // ============================================
+
+      function startMission() {
+        state.phase = 1;
+        state.actionPoints = state.maxActionPoints;
+        
+        showScreen('screen-contacts');
+        
+        const contactArea = document.getElementById('contact-interactions');
+        contactArea.innerHTML = `
+          <div class="display-line">You're in Paris. Three contacts are available.</div>
+          <div class="display-line">Click a contact on the left to query them.</div>
+          <div class="display-line" style="color: #5a7a3c;">Each interaction costs 1 Action Point.</div>
+        `;
+        
+        renderAll();
+      }
+
+      function interactWithContact(contactIndex) {
+        if (state.actionPoints <= 0) {
+          showNotification('No action points remaining!', 'error');
+          return;
+        }
+
+        const contact = state.contacts[contactIndex];
+        state.actionPoints--;
+        
+        // Trust check
+        const successChance = contact.trust / 100;
+        const roll = Math.random();
+        
+        if (roll < successChance) {
+          // Success!
+          contact.trust = Math.min(100, contact.trust + 5);
+          
+          let intel = '';
+          if (contactIndex === 0) {
+            intel = 'Café Owner: "Trucks leave at midnight. Heading north."';
+            state.missionData.targetConfirmed = true;
+          } else if (contactIndex === 1) {
+            intel = 'Resistance: "Dr. Weber leads the program. Peenemünde facility."';
+            state.missionData.scientistName = 'Wernher von Braun';
+          } else {
+            intel = 'German Clerk: "Launch scheduled for dawn. Code: WEBER-DAWN"';
+            state.missionData.dateConfirmed = true;
+            state.missionData.launchDate = 'Dawn';
+          }
+          
+          showNotification(`✓ Intel acquired!`, 'success');
+        } else {
+          contact.trust = Math.max(0, contact.trust - 10);
+          intel = `${contact.name}: "I... I can't help you. Not tonight."`;
+          showNotification(`${contact.name} refused to talk. Trust decreased.`, 'error');
+        }
+        
+        const contactArea = document.getElementById('contact-interactions');
+        contactArea.innerHTML += `<div class="display-line">${intel}</div>`;
+        
+        renderAll();
+      }
+
+      function nextPhase() {
+        state.phase = 2;
+        showScreen('screen-puzzle');
+        
+        // Generate Morse code message
+        const messages = [
+          'WEBER', 'PEENEMÜNDE', 'DAWN', 'LAUNCH'
+        ];
+        const targetWord = messages[Math.floor(Math.random() * messages.length)];
+        state.decodedMessage = targetWord;
+        
+        // Convert to Morse (simplified - just letters)
+        let morseCode = '';
+        for (let char of targetWord.toUpperCase()) {
+          // Find matching morse code
+          for (let [morse, letter] of Object.entries(morseMap)) {
+            if (letter === char) {
+              morseCode += morse + ' ';
+              break;
+            }
+          }
+        }
+        
+        state.currentMorseCode = morseCode.trim();
+        
+        // Display with dots and dashes styling
+        const display = document.getElementById('morse-display');
+        let html = '';
+        for (let char of state.currentMorseCode) {
+          if (char === '•') html += '<span class="morse-dot">•</span>';
+          else if (char === '—') html += '<span class="morse-dash">—</span>';
+          else if (char === ' ') html += '&nbsp;&nbsp;';
+        }
+        display.innerHTML = html;
+        
+        // Reset puzzle state
+        document.getElementById('code-book-modal').style.display = 'none';
+        document.getElementById('morse-input').style.display = 'none';
+        document.getElementById('puzzle-controls').style.display = 'block';
+      }
+
+      function openCodeBook() {
+        const modal = document.getElementById('code-book-modal');
+        modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+      }
+
+      function solveMyself() {
+        document.getElementById('puzzle-controls').style.display = 'none';
+        document.getElementById('morse-input').style.display = 'block';
+        
+        // Start timer
+        startTimer(60);
+      }
+
+      function callContactForHelp() {
+        // Find highest trust contact
+        let bestContact = state.contacts[0];
+        for (let contact of state.contacts) {
+          if (contact.trust > bestContact.trust) bestContact = contact;
+        }
+        
+        if (bestContact.trust < 15) {
+          showNotification('No contacts have enough trust to help!', 'error');
+          return;
+        }
+        
+        bestContact.trust -= 15;
+        renderAll();
+        
+        // Auto-solve with penalty
+        document.getElementById('decoded-text').textContent = state.decodedMessage;
+        document.getElementById('morse-input').style.display = 'none';
+        document.getElementById('puzzle-controls').style.display = 'block';
+        
+        showNotification(`${bestContact.name} helped (-15 trust)`, 'success');
+        
+        // Skip timer
+        if (state.timerId) clearTimeout(state.timerId);
+        setTimeout(() => completePuzzle(true), 2000);
+      }
+
+      function addMorseSymbol(symbol) {
+        const current = document.getElementById('current-morse');
+        current.textContent += symbol;
+      }
+
+      function clearCurrentLetter() {
+        document.getElementById('current-morse').textContent = '';
+      }
+
+      function submitLetter() {
+        const current = document.getElementById('current-morse').textContent.trim();
+        if (!current) return;
+        
+        const letter = morseMap[current] || '?';
+        const decoded = document.getElementById('decoded-text');
+        decoded.textContent += letter;
+        
+        // Check if complete
+        if (decoded.textContent === state.decodedMessage) {
+          stopTimer();
+          showNotification('✓ DECODE COMPLETE!', 'success');
+          setTimeout(() => completePuzzle(true), 1500);
+        } else if (decoded.textContent.length >= state.decodedMessage.length) {
+          stopTimer();
+          showNotification('✗ INCORRECT', 'error');
+          setTimeout(() => completePuzzle(false), 1500);
+        }
+        
+        clearCurrentLetter();
+      }
+
+      function startTimer(seconds) {
+        state.timeLeft = seconds;
+        document.getElementById('timer-countdown').textContent = state.timeLeft;
+        document.getElementById('timer-modal').style.display = 'flex';
+        
+        state.timerId = setInterval(() => {
+          state.timeLeft--;
+          document.getElementById('timer-countdown').textContent = state.timeLeft;
+          
+          if (state.timeLeft <= 0) {
+            stopTimer();
+            showNotification('✗ TIME OUT!', 'error');
+            setTimeout(() => completePuzzle(false), 1500);
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        if (state.timerId) clearInterval(state.timerId);
+        document.getElementById('timer-modal').style.display = 'none';
+      }
+
+      function completePuzzle(success) {
+        state.phase = 3;
+        
+        if (!success) {
+          state.health -= 15;
+          state.alertLevel = 'HIGH';
+          showNotification('Gestapo closing in! Health -15%', 'error');
+        }
+        
+        renderAll();
+        
+        // Show debrief
+        setTimeout(() => showDebrief(), 2000);
+      }
+
+      function showDebrief() {
+        showScreen('screen-debrief');
+        
+        const content = document.getElementById('debrief-content');
+        
+        let score = 100;
+        if (!state.missionData.targetConfirmed) score -= 30;
+        if (!state.missionData.dateConfirmed) score -= 30;
+        if (state.health < 50) score -= 20;
+        
+        const totalPoints = state.maxActionPoints - state.actionPoints;
+        
+        content.innerHTML = `
+          <div class="score-item">
+            <span>Intel Accuracy</span>
+            <span class="score-value">${Math.round((state.missionData.targetConfirmed && state.missionData.dateConfirmed) ? 100 : 50)}%</span>
+          </div>
+          <div class="score-item">
+            <span>Health Preserved</span>
+            <span class="score-value">${state.health}%</span>
+          </div>
+          <div class="score-item">
+            <span>Action Points Used</span>
+            <span class="score-value">${totalPoints}/${state.maxActionPoints}</span>
+          </div>
+          <div class="score-item">
+            <span>Trust Impact</span>
+            <span class="score-value">${calculateTrustChange()}</span>
+          </div>
+          <hr style="margin: 15px 0; border: none; border-top: 2px dashed rgba(61,40,23,0.2);">
+          <div class="score-item" style="font-size: 16px;">
+            <span><strong>MISSION SCORE</strong></span>
+            <span class="score-value"><strong>${score}</strong>/100</span>
+          </div>
+        `;
+      }
+
+      function calculateTrustChange() {
+        let total = 0;
+        state.contacts.forEach(c => {
+          const original = c.trust; // simplified - would need tracking
+          if (c.trust >= 50) total++;
+        });
+        return `${total}/3 contacts active`;
+      }
+
+      function startNewMission() {
+        state.phase = 0;
+        state.actionPoints = state.maxActionPoints;
+        state.timeRemaining = 259200;
+        showScreen('screen-briefing');
+        
+        const text = missionMessages.join('\n');
+        typeText(text, 'briefing-text', () => {});
+      }
+
+      function saveGame() {
+        localStorage.setItem('intelligenceNetworkSave', JSON.stringify(state));
+        showNotification('✓ Dossier saved!', 'success');
+      }
+
+      function loadGame() {
+        const saved = localStorage.getItem('intelligenceNetworkSave');
+        if (saved) {
+          try {
+            const loaded = JSON.parse(saved);
+            state = { ...state, ...loaded };
+          } catch (e) {
+            console.log('Save file corrupted, using defaults');
+          }
+        }
+      }
+
+      function startMissionTimer() {
+        setInterval(() => {
+          if (state.timeRemaining > 0 && state.phase > 0) {
+            state.timeRemaining -= 1; // Simplified - real game would use real time
+            renderTime();
+          }
+        }, 60000); // Update every minute (real time)
+      }
+
+      function showNotification(message, type = '') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = 'notification' + (type ? ' ' + type : '');
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          setTimeout(() => notification.classList.remove('success', 'error'), 300);
+        }, 3000);
+      }
+
+      // Expose public methods
+      return {
+        init,
+        showScreen,
+        startMission,
+        nextPhase,
+        openCodeBook,
+        solveMyself,
+        callContactForHelp,
+        addMorseSymbol,
+        clearCurrentLetter,
+        submitLetter,
+        saveGame,
+        startNewMission
+      };
+    }();
+
+    // Initialize game when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      Game.init();
+    });
   </script>
 </body>
 </html>
