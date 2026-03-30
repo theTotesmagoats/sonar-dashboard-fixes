@@ -103,7 +103,7 @@
             position: absolute;
             bottom: 15px;
             left: 15px;
-            z-index: 1000;
+            z-index: 0; /* Behind character markers */
             background: white;
             padding: 0.75rem 1rem;
             border-radius: 6px;
@@ -395,11 +395,11 @@
     
     <script>
         // ============================================
-        // DATA: Expanded Characters (12 total)
+        // DATA: Characters (12 total)
         // ============================================
 
         const characters = [
-            { id: "jesus", name: "Jesus", color: "#D4AF37" },           // Gold glow
+            { id: "jesus", name: "Jesus", color: "#D4AF37" },
             { id: "mary_magdalene", name: "Mary Magdalene", color: "#E91E63" },
             { id: "peter", name: "Peter", color: "#2196F3" },
             { id: "john", name: "John", color: "#4CAF50" },
@@ -414,7 +414,7 @@
         ];
 
         // ============================================
-        // LOCATIONS (Accurate coordinates)
+        // LOCATIONS
         // ============================================
 
         const locations = {
@@ -429,7 +429,7 @@
         };
 
         // ============================================
-        // TIMELINE DATA (Expanded with more characters)
+        // TIMELINE DATA
         // ============================================
 
         const timeline = [
@@ -449,7 +449,7 @@
                     jesus: [locations.garden_gethsemane, locations.praetorium, locations.golgotha, locations.tomb],
                     mary_magdalene: [locations.golgotha],
                     peter: [locations.praetorium],
-                    john: [locations.garden_gethsemana, locations.golgotha],
+                    john: [locations.garden_gethsemane, locations.golgotha],
                     mary_mother: [locations.golgotha],
                     joseph_arimathea: [locations.praetorium, locations.tomb],
                     nicodemus: [locations.tomb],
@@ -517,7 +517,7 @@
                     john: [locations.upper_room],
                     mary_mother: [locations.upper_room],
                     james: [locations.upper_room],
-                    thomas: [locations.upper_room] // absent from the room at this point
+                    thomas: [locations.upper_room]
                 }
             },
             {
@@ -600,23 +600,23 @@
         }
 
         // ============================================
-        // MAP INITIALIZATION (English Tiles)
+        // MAP INITIALIZATION (FIXED TILE LAYERS)
         // ============================================
 
         const map = L.map('map').setView([31.78, 35.23], 14);
 
-        // Modern OSM tiles (already in English by default)
-        const modernTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
+        // Modern OSM tiles (English by default)
+        const modernTiles = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            minZoom: 10,
             maxZoom: 19,
-            language: 'en' // Force English labels where possible
+            attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Historical overlay (simulated with different tile style)
-        const historicalTiles = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-            attribution: '© Stamen Design, © OpenStreetMap contributors',
-            maxZoom: 18,
-            opacity: 0.8
+        // Historical-style tiles (CartoDB Dark Matter - clean monochrome look)
+        const historicalTiles = new L.TileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            minZoom: 10,
+            maxZoom: 19,
+            attribution: '© OpenStreetMap, © CartoDB'
         });
 
         let currentMapType = 'modern';
@@ -645,7 +645,7 @@
 
         function createMarker(character, latLng) {
             const options = character.id === 'jesus' ? 
-                { radius: 10, color: '#D4AF37', fillColor: '#D4AF37', fillOpacity: 1, weight: 2 } :
+                { radius: 12, color: '#D4AF37', fillColor: '#D4AF37', fillOpacity: 1, weight: 3 } :
                 { radius: 6, color: character.color, fillColor: character.color, fillOpacity: 0.9 };
 
             return L.circleMarker([latLng.lat, latLng.lng], options);
@@ -690,12 +690,12 @@
 
                 const positions = dayData.positions[charId];
                 
-                // Add marker at final position only (cleaner than multiple dots)
+                // Add marker at final position only (cleaner)
                 const lastPos = positions[positions.length - 1];
                 const marker = createMarker(character, lastPos);
                 
                 if (character.id === 'jesus') {
-                    marker.setStyle({ weight: 3 });
+                    marker.setStyle({ weight: 4 });
                 }
 
                 map.addLayer(marker);
@@ -713,7 +713,7 @@
                     map.addLayer(polyline);
                     activeLayers[`${charId}-path`] = polyline;
 
-                    // Add start and end markers for path visualization
+                    // Add start marker for path visualization
                     const startPos = positions[0];
                     if (startPos !== lastPos) {
                         const startMarker = L.circleMarker([startPos.lat, startPos.lng], {
