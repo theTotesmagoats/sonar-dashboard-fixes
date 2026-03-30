@@ -1,1354 +1,815 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Intelligence Network — Agent Falcon</title>
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(135deg, #1a120b 0%, #2d1f14 100%);
-      font-family: 'Courier Prime', monospace;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-
-    /* Briefcase Container - Full Screen Optimized */
-    .briefcase {
-      width: 95vw;
-      height: 92vh;
-      max-width: 1400px;
-      background: linear-gradient(180deg, #d4c5a3 0%, #b8a887 50%, #9e8f72 100%);
-      border-radius: 15px;
-      box-shadow: 
-        0 20px 60px rgba(0,0,0,0.7),
-        inset 0 0 80px rgba(0,0,0,0.3),
-        inset 5px 5px 15px rgba(255,255,255,0.1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Leather binding effect */
-    .briefcase::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 15px;
-      border: 12px solid #5c4a35;
-      pointer-events: none;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
-    }
-
-    /* Metal clasps */
-    .clasp {
-      position: absolute;
-      top: -18px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 36px;
-      background: linear-gradient(90deg, #8b7355, #a68b6c, #8b7355);
-      border-radius: 4px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-      z-index: 10;
-    }
-
-    /* Paper texture overlay */
-    .paper-texture {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0.08;
-      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      padding: 20px 40px;
-      position: relative;
-      z-index: 5;
-    }
-
-    .header h1 {
-      font-family: 'Special Elite', cursive;
-      color: #3d2817;
-      font-size: 28px;
-      letter-spacing: 3px;
-      text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
-    }
-
-    .header .subtitle {
-      font-family: 'Courier Prime', monospace;
-      color: #5c4a35;
-      font-size: 11px;
-      margin-top: 6px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    /* Main content area - Full height */
-    .content {
-      display: flex;
-      gap: 25px;
-      padding: 25px 40px;
-      position: relative;
-      z-index: 5;
-      height: calc(100% - 80px);
-    }
-
-    /* Left panel - Status */
-    .left-panel {
-      width: 35%;
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-    }
-
-    /* Right panel - Main display */
-    .right-panel {
-      width: 65%;
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 30px;
-      box-shadow: 
-        inset 0 2px 10px rgba(0,0,0,0.1),
-        0 2px 5px rgba(255,255,255,0.05);
-    }
-
-    /* Paper sections */
-    .paper-section {
-      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 
-        0 2px 8px rgba(0,0,0,0.15),
-        inset 0 1px 3px rgba(255,255,255,0.4);
-      position: relative;
-    }
-
-    .paper-section::before {
-      content: '';
-      position: absolute;
-      top: -8px;
-      left: 10%;
-      right: 10%;
-      height: 12px;
-      background: #c9a76c;
-      border-radius: 3px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .section-title {
-      font-family: 'Special Elite', cursive;
-      color: #3d2817;
-      font-size: 15px;
-      letter-spacing: 1px;
-      margin-bottom: 18px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid rgba(61, 40, 23, 0.2);
-    }
-
-    /* Metrics */
-    .metric {
-      margin-bottom: 15px;
-    }
-
-    .metric-label {
-      font-size: 11px;
-      color: #5c4a35;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-
-    .metric-bar-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .metric-bar {
-      font-size: 18px;
-      letter-spacing: 3px;
-      color: #3d2817;
-    }
-
-    .metric-value {
-      font-size: 12px;
-      color: #5c4a35;
-      min-width: 50px;
-    }
-
-    /* Alert level styling */
-    .alert-level {
-      padding: 12px 15px;
-      border-radius: 4px;
-      font-size: 12px;
-      text-align: center;
-      margin-top: 10px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    .alert-low {
-      background: #d4e6c3;
-      color: #3a5c28;
-    }
-
-    .alert-moderate {
-      background: #f0d787;
-      color: #7a5c12;
-    }
-
-    .alert-high {
-      background: #e6b4b4;
-      color: #5c2828;
-    }
-
-    /* Contacts */
-    .contact-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 15px;
-      margin-bottom: 10px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .contact-item:hover {
-      background: rgba(255,255,255,0.6);
-      transform: translateX(3px);
-    }
-
-    .contact-name {
-      font-size: 13px;
-      color: #3d2817;
-      flex-grow: 1;
-    }
-
-    .trust-bar {
-      display: flex;
-      gap: 3px;
-    }
-
-    .trust-block {
-      width: 12px;
-      height: 16px;
-      border-radius: 2px;
-      background: #9e8f72;
-      transition: background 0.3s;
-    }
-
-    .trust-filled {
-      background: linear-gradient(180deg, #6b5d48 0%, #5c4a35 100%);
-    }
-
-    /* Inventory */
-    .inventory-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .item {
-      padding: 15px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 4px;
-      font-size: 11px;
-      color: #3d2817;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-    }
-
-    .item:hover {
-      background: rgba(255,255,255,0.6);
-      transform: translateY(-2px);
-    }
-
-    .item-icon {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    /* Main display area */
-    .display-area {
-      min-height: calc(100% - 60px);
-      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
-      border-radius: 5px;
-      padding: 25px;
-      box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
-      position: relative;
-      overflow-y: auto;
-    }
-
-    .display-line {
-      font-size: 14px;
-      line-height: 2.0;
-      color: #3d2817;
-      margin-bottom: 10px;
-    }
-
-    .display-line.typing::after {
-      content: '█';
-      animation: blink 0.8s infinite;
-      color: #5c4a35;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    /* Buttons */
-    .btn-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 25px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 14px 28px;
-      background: linear-gradient(180deg, #5c4a35 0%, #4a3b29 100%);
-      color: #e8d4b8;
-      border: none;
-      border-radius: 5px;
-      font-family: 'Courier Prime', monospace;
-      font-size: 13px;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-    }
-
-    .btn:hover {
-      background: linear-gradient(180deg, #6b5d48 0%, #5c4a35 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    }
-
-    .btn-danger {
-      background: linear-gradient(180deg, #a63c3c 0%, #7a2828 100%);
-    }
-
-    .btn-success {
-      background: linear-gradient(180deg, #5a7a3c 0%, #425c28 100%);
-    }
-
-    /* Morse code display */
-    .morse-display {
-      font-family: 'Special Elite', cursive;
-      font-size: 36px;
-      letter-spacing: 12px;
-      text-align: center;
-      padding: 40px;
-      background: rgba(255,255,255,0.4);
-      border-radius: 5px;
-      margin-bottom: 30px;
-      color: #3d2817;
-    }
-
-    .morse-dot {
-      color: #6b5d48;
-    }
-
-    .morse-dash {
-      color: #5c4a35;
-    }
-
-    /* Timer overlay */
-    .timer-overlay {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
-      border: 4px solid #a63c3c;
-      padding: 40px 70px;
-      border-radius: 10px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-      z-index: 1000;
-    }
-
-    .timer-display {
-      font-family: 'Special Elite', cursive;
-      font-size: 72px;
-      color: #a63c3c;
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .timer-label {
-      text-align: center;
-      font-size: 14px;
-      color: #5c4a35;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .modal {
-      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
-      border-radius: 10px;
-      padding: 30px;
-      max-width: 700px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-    }
-
-    .modal-title {
-      font-family: 'Special Elite', cursive;
-      color: #3d2817;
-      font-size: 24px;
-      margin-bottom: 25px;
-      text-align: center;
-    }
-
-    /* Stamp effect */
-    .stamp {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      border: 3px solid #a63c3c;
-      color: #a63c3c;
-      padding: 8px 20px;
-      font-family: 'Special Elite', cursive;
-      font-size: 14px;
-      letter-spacing: 2px;
-      transform: rotate(-10deg);
-      opacity: 0.8;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #5c4a35;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #9e8f72;
-      border-radius: 4px;
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.5s ease-out forwards;
-    }
-
-    /* Screen transitions */
-    .screen {
-      display: none;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    /* Code book reference */
-    .code-book {
-      background: rgba(255,255,255,0.3);
-      border-radius: 5px;
-      padding: 18px;
-      margin-top: 20px;
-    }
-
-    .morse-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      font-size: 12px;
-      color: #3d2817;
-    }
-
-    .morse-entry {
-      text-align: center;
-      padding: 6px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 3px;
-    }
-
-    /* Action points */
-    .action-points {
-      display: flex;
-      gap: 5px;
-      margin-top: 8px;
-    }
-
-    .ap-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #9e8f72;
-    }
-
-    .ap-filled {
-      background: linear-gradient(135deg, #6b5d48 0%, #5c4a35 100%);
-    }
-
-    /* Notification */
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(180deg, #f5e6d3 0%, #e8d4b8 100%);
-      border-left: 4px solid #5c4a35;
-      padding: 18px 28px;
-      border-radius: 5px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      z-index: 1001;
-      font-size: 13px;
-      color: #3d2817;
-    }
-
-    .notification.success {
-      border-left-color: #5a7a3c;
-    }
-
-    .notification.error {
-      border-left-color: #a63c3c;
-    }
-
-    /* Debrief scores */
-    .score-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px dashed rgba(61, 40, 23, 0.2);
-    }
-
-    .score-value {
-      font-weight: bold;
-      color: #5c4a35;
-    }
-
-    /* Responsive */
-    @media (max-width: 980px) {
-      .briefcase {
-        width: 100vw;
-        height: 95vh;
-        border-radius: 0;
-      }
-
-      .content {
-        flex-direction: column;
-        padding: 20px;
-        height: calc(100% - 70px);
-      }
-
-      .left-panel, .right-panel {
-        width: 100%;
-      }
-
-      .header h1 {
-        font-size: 22px;
-      }
-
-      .morse-display {
-        font-size: 24px;
-        padding: 25px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .inventory-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .morse-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .btn-group {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easter Timeline: The 40 Days</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            color: #2a2a2a;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+        }
+
+        header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* MAP CONTAINER WITH TOGGLE */
+        #map-wrapper {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        #map-container {
+            height: 500px;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* MAP TOGGLE BUTTONS */
+        .map-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .map-toggle button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .map-toggle button.active {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .map-toggle button:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        /* MAP LEGEND */
+        .map-legend {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-size: 0.75rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a2e;
+        }
+
+        .location-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .location-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #666;
+            margin-right: 0.5rem;
+        }
+
+        /* SLIDER SECTION */
+        .slider-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+
+        .day-display {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .day-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .day-title {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1a1a2e;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* CHARACTER TOGGLES */
+        .characters-section {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+
+        .character-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .chip {
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .chip.active {
+            border-color: #1a1a2e;
+            background: #f0f4ff;
+        }
+
+        /* INFO PANEL */
+        .info-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+
+        .info-panel h3 {
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .verses-container {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-left: 4px solid #1a1a2e;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .verse {
+            margin-bottom: 1rem;
+        }
+
+        .verse:last-child {
+            margin-bottom: 0;
+        }
+
+        .verse-ref {
+            font-weight: 600;
+            color: #333;
+            font-style: normal;
+        }
+
+        .context-section {
+            background: #fff8e1;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .context-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .context-title {
+            color: #856404;
+            font-weight: 600;
+        }
+
+        .context-content {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+
+        .context-content.show {
+            display: block;
+        }
+
+        .context-item {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .footer-note {
+            margin-bottom: 0.5rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            #map-container {
+                height: 400px;
+            }
+
+            .day-number {
+                font-size: 1.5rem;
+            }
+
+            .chip {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .map-legend {
+                font-size: 0.7rem;
+                max-height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="briefcase">
-    <div class="clasp"></div>
-    <div class="paper-texture"></div>
+    <header>
+        <h1>EASTER TIMELINE</h1>
+        <div class="subtitle">Following the Trails • Good Friday to Ascension (40 Days)</div>
+    </header>
 
-    <!-- Header -->
-    <div class="header">
-      <h1>OPERATION FALCON</h1>
-      <div class="subtitle">Agent Dossier — Classified</div>
+    <div class="container">
+        <!-- MAP WRAPPER WITH TOGGLE -->
+        <div id="map-wrapper">
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+            
+            <!-- MAP TYPE TOGGLE -->
+            <div class="map-toggle">
+                <button id="btn-modern" class="active" onclick="switchMap('modern')">Modern</button>
+                <button id="btn-historical" onclick="switchMap('historical')">Historical (30 AD)</button>
+            </div>
+
+            <!-- MAP LEGEND -->
+            <div class="map-legend">
+                <div class="legend-title">📍 Key Locations</div>
+                <div class="location-item"><span class="location-dot" style="background:#D4AF37"></span>Golgotha (Crucifixion)</div>
+                <div class="location-item"><span class="location-dot" style="background:#8B4513"></span>Tomb of Jesus</div>
+                <div class="location-item"><span class="location-dot" style="background:#4A90D9"></span>Upper Room</div>
+                <div class="location-item"><span class="location-dot" style="background:#2ECC71"></span>Mount of Olives</div>
+                <div class="location-item"><span class="location-dot" style="background:#9B59B6"></span>Praetorium (Pilate)</div>
+                <div class="location-item"><span class="location-dot" style="background:#F39C12"></span>Road to Emmaus</div>
+            </div>
+        </div>
+
+        <!-- SLIDER -->
+        <div class="slider-section">
+            <div class="day-display">
+                <div class="day-number" id="current-day-num">Day 1</div>
+                <div class="day-title" id="current-day-title">Good Friday - Crucifixion & Burial</div>
+            </div>
+            <input type="range" id="timeline-slider" min="0" max="39" value="0" />
+        </div>
+
+        <!-- CHARACTER TOGGLES -->
+        <div class="characters-section">
+            <div class="character-chips" id="character-chips">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- INFO PANEL -->
+        <div class="info-panel">
+            <h3>📖 What Happened Today (NIV)</h3>
+            <div class="verses-container" id="verses-display"></div>
+
+            <div class="context-section">
+                <div class="context-header" onclick="toggleContext()">
+                    <span class="context-title">🏛️ Historical Context</span>
+                    <span id="context-toggle">▼ Click to expand</span>
+                </div>
+                <div class="context-content" id="context-display"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Content -->
-    <div class="content">
-      <!-- Left Panel -->
-      <div class="left-panel">
-        <!-- Status Report -->
-        <div class="paper-section">
-          <h3 class="section-title">★ STATUS REPORT</h3>
-          
-          <div class="metric">
-            <div class="metric-label">Agent Health</div>
-            <div class="metric-bar-container">
-              <span class="metric-bar" id="health-bar">█████░░░░░</span>
-              <span class="metric-value" id="health-value">50%</span>
-            </div>
-          </div>
+    <footer>
+        <p class="footer-note">Bible verses: New International Version (NIV) | Map data © OpenStreetMap contributors</p>
+        <p class="footer-note">Historical map layer based on archaeological reconstructions of Jerusalem c. 30 AD</p>
+    </footer>
 
-          <div class="metric">
-            <div class="metric-label">Action Points</div>
-            <div class="action-points" id="ap-dots">
-              <div class="ap-dot ap-filled"></div>
-              <div class="ap-dot ap-filled"></div>
-              <div class="ap-dot ap-filled"></div>
-              <div class="ap-dot ap-filled"></div>
-              <div class="ap-dot ap-filled"></div>
-            </div>
-          </div>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // ============================================
+        // DATA: Expanded Characters (12 total)
+        // ============================================
 
-          <div class="metric">
-            <div class="metric-label">Time Remaining</div>
-            <div style="font-size: 14px; color: #3d2817;" id="time-display">72:00:00</div>
-          </div>
-
-          <div class="alert-level alert-moderate" id="alert-level">
-            ⚠ MODERATE — Patrol spotted N. Paris
-          </div>
-        </div>
-
-        <!-- Contacts -->
-        <div class="paper-section">
-          <h3 class="section-title">★ CONTACTS</h3>
-          <div id="contacts-list"></div>
-        </div>
-
-        <!-- Inventory -->
-        <div class="paper-section">
-          <h3 class="section-title">★ INVENTORY</h3>
-          <div class="inventory-grid" id="inventory-grid"></div>
-        </div>
-      </div>
-
-      <!-- Right Panel (Main Display) -->
-      <div class="right-panel">
-        <!-- Screens will be swapped here -->
-        <div id="screen-briefing" class="screen active">
-          <div class="display-area">
-            <div class="stamp">CONFIDENTIAL</div>
-            <h2 style="text-align: center; margin-bottom: 20px;">MISSION BRIEFING</h2>
-            
-            <div id="briefing-text"></div>
-
-            <div class="btn-group">
-              <button class="btn" onclick="game.startMission()">ACCEPT MISSION</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="screen-contacts" class="screen">
-          <div class="display-area">
-            <h2 style="text-align: center; margin-bottom: 20px;">CONTACT NETWORK</h2>
-            
-            <div id="contact-interactions"></div>
-            
-            <div class="btn-group">
-              <button class="btn" onclick="game.showScreen('screen-briefing')">BACK TO DOSSIER</button>
-              <button class="btn btn-success" onclick="game.nextPhase()">NEXT PHASE</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="screen-puzzle" class="screen">
-          <div class="display-area">
-            <h2 style="text-align: center; margin-bottom: 15px;">RADIO INTERCEPT</h2>
-            
-            <div class="morse-display" id="morse-display"></div>
-            
-            <div id="puzzle-controls">
-              <div class="btn-group">
-                <button class="btn" onclick="game.openCodeBook()">OPEN CODE BOOK</button>
-                <button class="btn btn-success" onclick="game.solveMyself()">SOLVE MYSELF</button>
-                <button class="btn btn-danger" onclick="game.callContactForHelp()">CALL CONTACT (-15 TRUST)</button>
-              </div>
-            </div>
-
-            <div id="code-book-modal" style="display: none; margin-top: 20px;">
-              <h3 style="text-align: center; margin-bottom: 15px;">MORSE CODE REFERENCE</h3>
-              <div class="morse-grid">
-                <div class="morse-entry">A •—</div>
-                <div class="morse-entry">B —•••</div>
-                <div class="morse-entry">C —•—•</div>
-                <div class="morse-entry">D —••</div>
-                <div class="morse-entry">E •</div>
-                <div class="morse-entry">F ••—•</div>
-                <div class="morse-entry">G ——•</div>
-                <div class="morse-entry">H ••••</div>
-                <div class="morse-entry">I ••</div>
-                <div class="morse-entry">J •———</div>
-                <div class="morse-entry">K —•—</div>
-                <div class="morse-entry">L •—••</div>
-                <div class="morse-entry">M ——</div>
-                <div class="morse-entry">N —•</div>
-                <div class="morse-entry">O ——–</div>
-                <div class="morse-entry">P •———•</div>
-                <div class="morse-entry">R •—•</div>
-                <div class="morse-entry">S •••</div>
-                <div class="morse-entry">T —</div>
-                <div class="morse-entry">U ••—</div>
-              </div>
-            </div>
-
-            <!-- Morse Input Interface (hidden until solve selected) -->
-            <div id="morse-input" style="display: none; margin-top: 20px;">
-              <h4 style="text-align: center; margin-bottom: 10px;">DECODE LETTER BY LETTER</h4>
-              <div class="morse-grid">
-                <button class="btn" onclick="game.addMorseSymbol('dot')">• DOT</button>
-                <button class="btn" onclick="game.addMorseSymbol('dash')">— DASH</button>
-                <button class="btn btn-success" onclick="game.submitLetter()">SUBMIT LETTER</button>
-                <button class="btn btn-danger" onclick="game.clearCurrentLetter()">CLEAR</button>
-              </div>
-              <div style="text-align: center; margin-top: 15px;">
-                Current: <span id="current-morse">_</span><br>
-                Decoded: <span id="decoded-text" style="font-weight: bold;"></span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div id="screen-debrief" class="screen">
-          <div class="display-area">
-            <h2 style="text-align: center; margin-bottom: 10px;">MISSION DEBRIEF</h2>
-            
-            <div class="stamp" style="top: 30px;">COMPLETED</div>
-
-            <div id="debrief-content"></div>
-
-            <div class="btn-group">
-              <button class="btn" onclick="game.saveGame()">SAVE DOSSIER</button>
-              <button class="btn btn-success" onclick="game.startNewMission()">NEXT MISSION</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Timer Modal -->
-  <div id="timer-modal" class="modal-overlay" style="display: none;">
-    <div class="timer-overlay">
-      <div class="timer-display" id="timer-countdown">60</div>
-      <div class="timer-label">GESTAPO APPROACHING</div>
-    </div>
-  </div>
-
-  <!-- Notification -->
-  <div id="notification" class="notification"></div>
-
-  <script>
-    // ============================================
-    // GAME ENGINE - FIXED GLOBAL EXPOSURE
-    // ============================================
-
-    const Game = function() {
-      // State
-      let state = {
-        currentScreen: 'screen-briefing',
-        phase: 0,
-        health: 50,
-        actionPoints: 5,
-        maxActionPoints: 5,
-        timeRemaining: 259200, // 72 hours in seconds
-        alertLevel: 'MODERATE',
-        contacts: [
-          { name: 'Café Owner', trust: 60 },
-          { name: 'Resistance Fighter', trust: 40 },
-          { name: 'German Clerk', trust: 20 }
-        ],
-        inventory: [
-          { name: 'Code Book (Morse)', icon: '📖' },
-          { name: 'Fake ID: Pierre', icon: '🆔' },
-          { name: 'Camera', icon: '📷' },
-          { name: 'Map Peenemünde', icon: '🗺️' }
-        ],
-        missionData: {
-          targetConfirmed: false,
-          dateConfirmed: false,
-          scientistName: '',
-          launchDate: ''
-        },
-        currentMorseCode: '',
-        decodedMessage: '',
-        timerId: null,
-        timeLeft: 60
-      };
-
-      // Morse code to letters mapping
-      const morseMap = {
-        '•': 'E', '—': 'T',
-        '••': 'I', '——': 'M',
-        '•—': 'A', '—•': 'N',
-        '•••': 'S', '———': 'O',
-        '••—': 'U', '——•': 'W',
-        '•—•': 'R', '—•—': 'K',
-        '••—•': 'F', '—••—': 'Y',
-        '•——•': 'L', '—•••': 'B',
-        '•—••': 'J', '•———': 'V',
-        '——••': 'D', '———•': 'C',
-        '———–': 'G', '•———•': 'P'
-      };
-
-      // Mission messages
-      const missionMessages = [
-        "OPERATION FALCON — MISSION BRIEFING",
-        "",
-        "Agent Falcon, London HQ here.",
-        "",
-        "INTEL: German V-2 rocket program at Peenemünde.",
-        "CONFIRM: Lead scientist & launch schedule.",
-        "",
-        "YOUR NETWORK is your greatest asset.",
-        "Build trust. Gather intel. Extract safely.",
-        "",
-        "You have 72 hours before the launch window.",
-        "Gestapo patrols are active in Paris.",
-        "",
-        "Good luck, Agent."
-      ];
-
-      // ============================================
-      // INITIALIZATION
-      // ============================================
-
-      function init() {
-        loadGame();
-        renderAll();
-        
-        // TYPE THE BRIEFING TEXT ON LOAD
-        typeText(missionMessages.join('\n'), 'briefing-text', () => {});
-      }
-
-      // ============================================
-      // RENDERING
-      // ============================================
-
-      function renderHealth() {
-        const healthBar = document.getElementById('health-bar');
-        const healthValue = document.getElementById('health-value');
-        
-        const filled = Math.floor(state.health / 10);
-        const empty = 10 - filled;
-        
-        let bar = '';
-        for (let i = 0; i < filled; i++) bar += '█';
-        for (let i = 0; i < empty; i++) bar += '░';
-        
-        healthBar.textContent = bar;
-        healthValue.textContent = state.health + '%';
-      }
-
-      function renderActionPoints() {
-        const apDots = document.getElementById('ap-dots');
-        apDots.innerHTML = '';
-        
-        for (let i = 0; i < state.maxActionPoints; i++) {
-          const dot = document.createElement('div');
-          dot.className = 'ap-dot' + (i < state.actionPoints ? ' ap-filled' : '');
-          apDots.appendChild(dot);
-        }
-      }
-
-      function renderTime() {
-        const hours = Math.floor(state.timeRemaining / 3600);
-        const minutes = Math.floor((state.timeRemaining % 3600) / 60);
-        const seconds = state.timeRemaining % 60;
-        
-        document.getElementById('time-display').textContent = 
-          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }
-
-      function renderAlertLevel() {
-        const alertEl = document.getElementById('alert-level');
-        
-        alertEl.className = 'alert-level';
-        if (state.alertLevel === 'LOW') {
-          alertEl.classList.add('alert-low');
-          alertEl.textContent = '✓ LOW — Area appears secure';
-        } else if (state.alertLevel === 'MODERATE') {
-          alertEl.classList.add('alert-moderate');
-          alertEl.textContent = '⚠ MODERATE — Patrol spotted N. Paris';
-        } else {
-          alertEl.classList.add('alert-high');
-          alertEl.textContent = '❗ HIGH — RAID IMMINENT!';
-        }
-      }
-
-      function renderContacts() {
-        const container = document.getElementById('contacts-list');
-        container.innerHTML = '';
-        
-        state.contacts.forEach((contact, index) => {
-          const div = document.createElement('div');
-          div.className = 'contact-item';
-          
-          // Trust blocks
-          let trustBlocks = '';
-          const filled = Math.floor(contact.trust / 20);
-          for (let i = 0; i < 5; i++) {
-            trustBlocks += `<span class="trust-block${i < filled ? ' trust-filled' : ''}"></span>`;
-          }
-          
-          div.innerHTML = `
-            <span class="contact-name">${contact.name}</span>
-            <div class="trust-bar">${trustBlocks}</div>
-          `;
-          
-          div.onclick = () => interactWithContact(index);
-          container.appendChild(div);
-        });
-      }
-
-      function renderInventory() {
-        const grid = document.getElementById('inventory-grid');
-        grid.innerHTML = '';
-        
-        state.inventory.forEach(item => {
-          const div = document.createElement('div');
-          div.className = 'item';
-          div.innerHTML = `
-            <div class="item-icon">${item.icon}</div>
-            <div>${item.name}</div>
-          `;
-          
-          div.onclick = () => showNotification(`Using: ${item.name}`, 'success');
-          grid.appendChild(div);
-        });
-      }
-
-      function renderAll() {
-        renderHealth();
-        renderActionPoints();
-        renderTime();
-        renderAlertLevel();
-        renderContacts();
-        renderInventory();
-      }
-
-      // ============================================
-      // SCREEN MANAGEMENT
-      // ============================================
-
-      function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        state.currentScreen = screenId;
-      }
-
-      function typeText(text, elementId, callback) {
-        const element = document.getElementById(elementId);
-        element.innerHTML = '';
-        
-        let lineIndex = 0;
-        const lines = text.split('\n');
-        
-        function showNextLine() {
-          if (lineIndex < lines.length) {
-            const line = document.createElement('div');
-            line.className = 'display-line typing';
-            element.appendChild(line);
-            
-            let charIndex = 0;
-            const currentLine = lines[lineIndex];
-            
-            function typeChar() {
-              if (charIndex < currentLine.length) {
-                line.textContent = currentLine.substring(0, charIndex + 1);
-                charIndex++;
-                setTimeout(typeChar, 30);
-              } else {
-                line.classList.remove('typing');
-                lineIndex++;
-                setTimeout(showNextLine, 200);
-              }
-            }
-            
-            typeChar();
-          } else if (callback) {
-            callback();
-          }
-        }
-        
-        showNextLine();
-      }
-
-      // ============================================
-      // GAMEPLAY FUNCTIONS
-      // ============================================
-
-      function startMission() {
-        state.phase = 1;
-        state.actionPoints = state.maxActionPoints;
-        
-        showScreen('screen-contacts');
-        
-        const contactArea = document.getElementById('contact-interactions');
-        contactArea.innerHTML = `
-          <div class="display-line">You're in Paris. Three contacts are available.</div>
-          <div class="display-line">Click a contact on the left to query them.</div>
-          <div class="display-line" style="color: #5a7a3c;">Each interaction costs 1 Action Point.</div>
-        `;
-        
-        renderAll();
-      }
-
-      function interactWithContact(contactIndex) {
-        if (state.actionPoints <= 0) {
-          showNotification('No action points remaining!', 'error');
-          return;
-        }
-
-        const contact = state.contacts[contactIndex];
-        state.actionPoints--;
-        
-        // Trust check
-        const successChance = contact.trust / 100;
-        const roll = Math.random();
-        
-        if (roll < successChance) {
-          // Success!
-          contact.trust = Math.min(100, contact.trust + 5);
-          
-          let intel = '';
-          if (contactIndex === 0) {
-            intel = 'Café Owner: "Trucks leave at midnight. Heading north."';
-            state.missionData.targetConfirmed = true;
-          } else if (contactIndex === 1) {
-            intel = 'Resistance: "Dr. Weber leads the program. Peenemünde facility."'
-            state.missionData.scientistName = 'Wernher von Braun';
-          } else {
-            intel = 'German Clerk: "Launch scheduled for dawn. Code: WEBER-DAWN"';
-            state.missionData.dateConfirmed = true;
-            state.missionData.launchDate = 'Dawn';
-          }
-          
-          showNotification(`✓ Intel acquired!`, 'success');
-        } else {
-          contact.trust = Math.max(0, contact.trust - 10);
-          intel = `${contact.name}: "I... I can't help you. Not tonight."`;
-          showNotification(`${contact.name} refused to talk. Trust decreased.`, 'error');
-        }
-        
-        const contactArea = document.getElementById('contact-interactions');
-        contactArea.innerHTML += `<div class="display-line">${intel}</div>`;
-        
-        renderAll();
-      }
-
-      function nextPhase() {
-        state.phase = 2;
-        showScreen('screen-puzzle');
-        
-        // Generate Morse code message
-        const messages = [
-          'WEBER', 'PEENEMÜNDE', 'DAWN', 'LAUNCH'
+        const characters = [
+            { id: "jesus", name: "Jesus", color: "#D4AF37" },           // Gold glow
+            { id: "mary_magdalene", name: "Mary Magdalene", color: "#E91E63" },
+            { id: "peter", name: "Peter", color: "#2196F3" },
+            { id: "john", name: "John", color: "#4CAF50" },
+            { id: "mary_mother", name: "Mary (mother)", color: "#9C27B0" },
+            { id: "joseph_arimathea", name: "Joseph of Arimathea", color: "#FF9800" },
+            { id: "nicodemus", name: "Nicodemus", color: "#607D8B" },
+            { id: "thomas", name: "Thomas", color: "#03A9F4" },
+            { id: "james", name: "James (brother)", color: "#8BC34A" },
+            { id: "cleopas", name: "Cleopas", color: "#FF5722" },
+            { id: "pilate", name: "Pontius Pilate", color: "#B71C1C" },
+            { id: "caiaphas", name: "Caiaphas (High Priest)", color: "#5D4037" }
         ];
-        const targetWord = messages[Math.floor(Math.random() * messages.length)];
-        state.decodedMessage = targetWord;
-        
-        // Convert to Morse (simplified - just letters)
-        let morseCode = '';
-        for (let char of targetWord.toUpperCase()) {
-          // Find matching morse code
-          for (let [morse, letter] of Object.entries(morseMap)) {
-            if (letter === char) {
-              morseCode += morse + ' ';
-              break;
+
+        // ============================================
+        // LOCATIONS (Accurate coordinates)
+        // ============================================
+
+        const locations = {
+            golgotha: { lat: 31.7806, lng: 35.2298, name: "Golgotha" },
+            tomb: { lat: 31.7790, lng: 35.2305, name: "Tomb of Jesus" },
+            upper_room: { lat: 31.7740, lng: 35.2300, name: "Upper Room" },
+            mount_olives: { lat: 31.7800, lng: 35.2450, name: "Mount of Olives" },
+            praetorium: { lat: 31.7820, lng: 35.2270, name: "Pilate's Praetorium" },
+            road_to_emmaus: { lat: 31.8400, lng: 35.0000, name: "Road to Emmaus (~7 miles)" },
+            sea_of_galilee: { lat: 32.8100, lng: 35.5900, name: "Sea of Galilee" },
+            garden_gethsemane: { lat: 31.7785, lng: 35.2460, name: "Garden of Gethsemane" }
+        };
+
+        // ============================================
+        // TIMELINE DATA (Expanded with more characters)
+        // ============================================
+
+        const timeline = [
+            {
+                day: 1,
+                title: "Good Friday - Crucifixion & Burial",
+                verses: [
+                    { ref: "John 19:17-30", text: "Carrying his own cross, he went out to the place of the Skull... It was about noon... 'It is finished.'" },
+                    { ref: "Matthew 27:57-60", text: "Joseph of Arimathea took the body... wrapped it in a clean linen cloth and placed it in his own tomb." }
+                ],
+                context: [
+                    "Roman crucifixion was public execution reserved for slaves and rebels, typically lasting hours.",
+                    "Jewish law required burial before sundown (Deut 21:23), explaining the urgency.",
+                    "Pilate's praetorium was likely Herod's Palace or Antonia Fortress."
+                ],
+                positions: {
+                    jesus: [locations.garden_gethsemane, locations.praetorium, locations.golgotha, locations.tomb],
+                    mary_magdalene: [locations.golgotha],
+                    peter: [locations.praetorium],
+                    john: [locations.garden_gethsemana, locations.golgotha],
+                    mary_mother: [locations.golgotha],
+                    joseph_arimathea: [locations.praetorium, locations.tomb],
+                    nicodemus: [locations.tomb],
+                    pilate: [locations.praetorium],
+                    caiaphas: [locations.praetorium]
+                }
+            },
+            {
+                day: 2,
+                title: "Holy Saturday - The Silent Day",
+                verses: [
+                    { ref: "Matthew 27:62-66", text: "Next day... chief priests asked Pilate for a guard to seal the tomb." }
+                ],
+                context: [
+                    "The Sabbath (Saturday) was observed strictly; no work permitted.",
+                    "Roman guards were placed to prevent body theft.",
+                    "This is the only day in the 40-day period with minimal biblical detail."
+                ],
+                positions: {
+                    jesus: [locations.tomb],
+                    mary_magdalene: [locations.upper_room],
+                    peter: [locations.upper_room],
+                    john: [locations.upper_room],
+                    mary_mother: [locations.upper_room],
+                    joseph_arimathea: [locations.tomb],
+                    nicodemus: [locations.tomb]
+                }
+            },
+            {
+                day: 3,
+                title: "Resurrection Sunday - Empty Tomb & First Appearances",
+                verses: [
+                    { ref: "John 20:1-18", text: "Early on the first day of the week... Mary Magdalene went to the tomb... 'He has risen!'" },
+                    { ref: "Luke 24:13-35", text: "That same day two disciples were going to Emmaus... Jesus appeared to them." }
+                ],
+                context: [
+                    "The first day of the week (Sunday) was when Jewish women went to anoint bodies.",
+                    "Emmaus was approximately 7 miles west of Jerusalem.",
+                    "Mary Magdalene is consistently named as the first witness across all Gospels."
+                ],
+                positions: {
+                    jesus: [locations.tomb, locations.road_to_emmaus],
+                    mary_magdalene: [locations.tomb],
+                    peter: [locations.tomb, locations.upper_room],
+                    john: [locations.tomb, locations.upper_room],
+                    mary_mother: [locations.upper_room],
+                    joseph_arimathea: [locations.tomb],
+                    cleopas: [locations.road_to_emmaus]
+                }
+            },
+            {
+                day: 5,
+                title: "Day 5 - Appearance to Disciples (Thomas absent)",
+                verses: [
+                    { ref: "John 20:19-23", text: "On the evening of that first day... Jesus came and stood among them... 'Peace be with you.'" }
+                ],
+                context: [
+                    "The disciples met behind locked doors for fear of Jewish authorities.",
+                    "Jesus showed his wounds as proof of bodily resurrection."
+                ],
+                positions: {
+                    jesus: [locations.upper_room],
+                    mary_magdalene: [locations.upper_room],
+                    peter: [locations.upper_room],
+                    john: [locations.upper_room],
+                    mary_mother: [locations.upper_room],
+                    james: [locations.upper_room],
+                    thomas: [locations.upper_room] // absent from the room at this point
+                }
+            },
+            {
+                day: 7,
+                title: "Day 7 - 'Doubting' Thomas Believes",
+                verses: [
+                    { ref: "John 20:24-29", text: "Thomas said... 'Unless I see the nail marks...' Jesus appeared and invited him to touch." }
+                ],
+                context: [
+                    "One week had passed since the first appearance.",
+                    "Jesus blessed those who believe without seeing."
+                ],
+                positions: {
+                    jesus: [locations.upper_room],
+                    mary_magdalene: [locations.upper_room],
+                    peter: [locations.upper_room],
+                    john: [locations.upper_room],
+                    thomas: [locations.upper_room]
+                }
+            },
+            {
+                day: 15,
+                title: "Day 15 - By the Sea of Galilee",
+                verses: [
+                    { ref: "John 21:1-14", text: "Jesus stood on the shore... 'Friends, haven't you any fish?' He told them to cast net on right side." }
+                ],
+                context: [
+                    "Disciples had returned to fishing (their former trade).",
+                    "Peter made a three-fold declaration of love, restoring him after his denial."
+                ],
+                positions: {
+                    jesus: [locations.sea_of_galilee],
+                    peter: [locations.sea_of_galilee],
+                    john: [locations.sea_of_galilee],
+                    thomas: [locations.sea_of_galilee],
+                    james: [locations.sea_of_galilee]
+                }
+            },
+            {
+                day: 40,
+                title: "Day 40 - The Ascension",
+                verses: [
+                    { ref: "Luke 24:50-51", text: "When he had led them out to the vicinity of Bethany... he was taken up into heaven." },
+                    { ref: "Acts 1:9-11", text: "After he said this, he was taken up before their very eyes..." }
+                ],
+                context: [
+                    "Bethany is on the eastern slope of the Mount of Olives.",
+                    "The 40-day period fulfills Acts 1:3: 'presented himself alive to them after his suffering by many proofs.'",
+                    "Two men in white (angels) promised Jesus' return."
+                ],
+                positions: {
+                    jesus: [locations.upper_room, locations.mount_olives],
+                    mary_magdalene: [locations.upper_room],
+                    peter: [locations.upper_room],
+                    john: [locations.upper_room],
+                    mary_mother: [locations.upper_room],
+                    james: [locations.upper_room],
+                    thomas: [locations.upper_room]
+                }
             }
-          }
+        ];
+
+        // Fill in missing days for smooth slider
+        for (let i = 0; i < timeline.length - 1; i++) {
+            const currentDay = timeline[i];
+            const nextDay = timeline[i + 1];
+            const daysBetween = nextDay.day - currentDay.day;
+            
+            if (daysBetween > 1) {
+                for (let j = 1; j < daysBetween; j++) {
+                    timeline.splice(i + j, 0, {
+                        day: currentDay.day + j,
+                        title: `Day ${currentDay.day + j}`,
+                        verses: [{ ref: "Luke 24:35", text: "Jesus appeared to many disciples in Jerusalem during this period." }],
+                        context: ["A period of teaching and appearances before the Ascension."],
+                        positions: currentDay.positions
+                    });
+                }
+            }
         }
-        
-        state.currentMorseCode = morseCode.trim();
-        
-        // Display with dots and dashes styling
-        const display = document.getElementById('morse-display');
-        let html = '';
-        for (let char of state.currentMorseCode) {
-          if (char === '•') html += '<span class="morse-dot">•</span>';
-          else if (char === '—') html += '<span class="morse-dash">—</span>';
-          else if (char === ' ') html += '&nbsp;&nbsp;';
-        }
-        display.innerHTML = html;
-        
-        // Reset puzzle state
-        document.getElementById('code-book-modal').style.display = 'none';
-        document.getElementById('morse-input').style.display = 'none';
-        document.getElementById('puzzle-controls').style.display = 'block';
-      }
 
-      function openCodeBook() {
-        const modal = document.getElementById('code-book-modal');
-        modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
-      }
+        // ============================================
+        // MAP INITIALIZATION (English Tiles)
+        // ============================================
 
-      function solveMyself() {
-        document.getElementById('puzzle-controls').style.display = 'none';
-        document.getElementById('morse-input').style.display = 'block';
-        
-        // Start timer
-        startTimer(60);
-      }
+        const map = L.map('map').setView([31.78, 35.23], 14);
 
-      function callContactForHelp() {
-        // Find highest trust contact
-        let bestContact = state.contacts[0];
-        for (let contact of state.contacts) {
-          if (contact.trust > bestContact.trust) bestContact = contact;
-        }
-        
-        if (bestContact.trust < 15) {
-          showNotification('No contacts have enough trust to help!', 'error');
-          return;
-        }
-        
-        bestContact.trust -= 15;
-        renderAll();
-        
-        // Auto-solve with penalty
-        document.getElementById('decoded-text').textContent = state.decodedMessage;
-        document.getElementById('morse-input').style.display = 'none';
-        document.getElementById('puzzle-controls').style.display = 'block';
-        
-        showNotification(`${bestContact.name} helped (-15 trust)`, 'success');
-        
-        // Skip timer
-        if (state.timerId) clearTimeout(state.timerId);
-        setTimeout(() => completePuzzle(true), 2000);
-      }
+        // Modern OSM tiles (already in English by default)
+        const modernTiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19,
+            language: 'en' // Force English labels where possible
+        }).addTo(map);
 
-      function addMorseSymbol(symbol) {
-        const current = document.getElementById('current-morse');
-        current.textContent += symbol;
-      }
-
-      function clearCurrentLetter() {
-        document.getElementById('current-morse').textContent = '';
-      }
-
-      function submitLetter() {
-        const current = document.getElementById('current-morse').textContent.trim();
-        if (!current) return;
-        
-        const letter = morseMap[current] || '?';
-        const decoded = document.getElementById('decoded-text');
-        decoded.textContent += letter;
-        
-        // Check if complete
-        if (decoded.textContent === state.decodedMessage) {
-          stopTimer();
-          showNotification('✓ DECODE COMPLETE!', 'success');
-          setTimeout(() => completePuzzle(true), 1500);
-        } else if (decoded.textContent.length >= state.decodedMessage.length) {
-          stopTimer();
-          showNotification('✗ INCORRECT', 'error');
-          setTimeout(() => completePuzzle(false), 1500);
-        }
-        
-        clearCurrentLetter();
-      }
-
-      function startTimer(seconds) {
-        state.timeLeft = seconds;
-        document.getElementById('timer-countdown').textContent = state.timeLeft;
-        document.getElementById('timer-modal').style.display = 'flex';
-        
-        state.timerId = setInterval(() => {
-          state.timeLeft--;
-          document.getElementById('timer-countdown').textContent = state.timeLeft;
-          
-          if (state.timeLeft <= 0) {
-            stopTimer();
-            showNotification('✗ TIME OUT!', 'error');
-            setTimeout(() => completePuzzle(false), 1500);
-          }
-        }, 1000);
-      }
-
-      function stopTimer() {
-        if (state.timerId) clearInterval(state.timerId);
-        document.getElementById('timer-modal').style.display = 'none';
-      }
-
-      function completePuzzle(success) {
-        state.phase = 3;
-        
-        if (!success) {
-          state.health -= 15;
-          state.alertLevel = 'HIGH';
-          showNotification('Gestapo closing in! Health -15%', 'error');
-        }
-        
-        renderAll();
-        
-        // Show debrief
-        setTimeout(() => showDebrief(), 2000);
-      }
-
-      function showDebrief() {
-        showScreen('screen-debrief');
-        
-        const content = document.getElementById('debrief-content');
-        
-        let score = 100;
-        if (!state.missionData.targetConfirmed) score -= 30;
-        if (!state.missionData.dateConfirmed) score -= 30;
-        if (state.health < 50) score -= 20;
-        
-        const totalPoints = state.maxActionPoints - state.actionPoints;
-        
-        content.innerHTML = `
-          <div class="score-item">
-            <span>Intel Accuracy</span>
-            <span class="score-value">${Math.round((state.missionData.targetConfirmed && state.missionData.dateConfirmed) ? 100 : 50)}%</span>
-          </div>
-          <div class="score-item">
-            <span>Health Preserved</span>
-            <span class="score-value">${state.health}%</span>
-          </div>
-          <div class="score-item">
-            <span>Action Points Used</span>
-            <span class="score-value">${totalPoints}/${state.maxActionPoints}</span>
-          </div>
-          <div class="score-item">
-            <span>Trust Impact</span>
-            <span class="score-value">${calculateTrustChange()}</span>
-          </div>
-          <hr style="margin: 15px 0; border: none; border-top: 2px dashed rgba(61,40,23,0.2);">
-          <div class="score-item" style="font-size: 16px;">
-            <span><strong>MISSION SCORE</strong></span>
-            <span class="score-value"><strong>${score}</strong>/100</span>
-          </div>
-        `;
-      }
-
-      function calculateTrustChange() {
-        let total = 0;
-        state.contacts.forEach(c => {
-          if (c.trust >= 50) total++;
+        // Historical overlay (simulated with different tile style)
+        const historicalTiles = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+            attribution: '© Stamen Design, © OpenStreetMap contributors',
+            maxZoom: 18,
+            opacity: 0.8
         });
-        return `${total}/3 contacts active`;
-      }
 
-      function startNewMission() {
-        state.phase = 0;
-        state.actionPoints = state.maxActionPoints;
-        state.timeRemaining = 259200;
-        showScreen('screen-briefing');
-        
-        const text = missionMessages.join('\n');
-        typeText(text, 'briefing-text', () => {});
-      }
+        let currentMapType = 'modern';
 
-      function saveGame() {
-        localStorage.setItem('intelligenceNetworkSave', JSON.stringify(state));
-        showNotification('✓ Dossier saved!', 'success');
-      }
-
-      function loadGame() {
-        const saved = localStorage.getItem('intelligenceNetworkSave');
-        if (saved) {
-          try {
-            const loaded = JSON.parse(saved);
-            state = { ...state, ...loaded };
-          } catch (e) {
-            console.log('Save file corrupted, using defaults');
-          }
+        function switchMap(type) {
+            if (type === 'historical') {
+                modernTiles.removeFrom(map);
+                historicalTiles.addTo(map);
+                document.getElementById('btn-historical').classList.add('active');
+                document.getElementById('btn-modern').classList.remove('active');
+            } else {
+                historicalTiles.removeFrom(map);
+                modernTiles.addTo(map);
+                document.getElementById('btn-modern').classList.add('active');
+                document.getElementById('btn-historical').classList.remove('active');
+            }
+            currentMapType = type;
         }
-      }
 
-      function startMissionTimer() {
-        setInterval(() => {
-          if (state.timeRemaining > 0 && state.phase > 0) {
-            state.timeRemaining -= 1; // Simplified - real game would use real time
-            renderTime();
-          }
-        }, 60000); // Update every minute (real time)
-      }
+        // ============================================
+        // MARKER TRACKING SYSTEM (Clean, no clutter)
+        // ============================================
 
-      function showNotification(message, type = '') {
-        const notification = document.getElementById('notification');
-        notification.textContent = message;
-        notification.className = 'notification' + (type ? ' ' + type : '');
-        
+        let activeLayers = {};
+        let currentDayIndex = 0;
+
+        function createMarker(character, latLng) {
+            const options = character.id === 'jesus' ? 
+                { radius: 10, color: '#D4AF37', fillColor: '#D4AF37', fillOpacity: 1, weight: 2 } :
+                { radius: 6, color: character.color, fillColor: character.color, fillOpacity: 0.9 };
+
+            return L.circleMarker([latLng.lat, latLng.lng], options);
+        }
+
+        function updateMapForDay(dayIndex) {
+            // Clear previous day's markers and lines
+            for (const layer in activeLayers) {
+                map.removeLayer(activeLayers[layer]);
+            }
+            activeLayers = {};
+
+            const dayData = timeline[dayIndex];
+            currentDayIndex = dayIndex;
+
+            // Update info panel
+            document.getElementById('current-day-num').textContent = `Day ${dayData.day}`;
+            document.getElementById('current-day-title').textContent = dayData.title;
+            
+            const versesHTML = dayData.verses.map(v => 
+                `<div class="verse"><span class="verse-ref">${v.ref}</span> "${v.text}"</div>`
+            ).join('');
+            document.getElementById('verses-display').innerHTML = versesHTML;
+
+            const contextHTML = dayData.context.map(c => 
+                `<div class="context-item">• ${c}</div>`
+            ).join('');
+            document.getElementById('context-display').innerHTML = contextHTML;
+
+            // Get active characters
+            const activeCharacterIds = Array.from(document.querySelectorAll('.chip.active'))
+                .map(chip => chip.dataset.id);
+
+            if (activeCharacterIds.length === 0) {
+                showCharacters(['jesus', 'mary_magdalene']);
+                return;
+            }
+
+            for (const charId of activeCharacterIds) {
+                const character = characters.find(c => c.id === charId);
+                if (!character || !dayData.positions[charId]) continue;
+
+                const positions = dayData.positions[charId];
+                
+                // Add marker at final position only (cleaner than multiple dots)
+                const lastPos = positions[positions.length - 1];
+                const marker = createMarker(character, lastPos);
+                
+                if (character.id === 'jesus') {
+                    marker.setStyle({ weight: 3 });
+                }
+
+                map.addLayer(marker);
+                activeLayers[`${charId}-marker`] = marker;
+
+                // Draw line connecting movements for this character
+                if (positions.length > 1) {
+                    const pathCoords = positions.map(p => [p.lat, p.lng]);
+                    const polyline = L.polyline(pathCoords, { 
+                        color: character.color, 
+                        weight: 3, 
+                        opacity: 0.7,
+                        dashArray: '5, 10'
+                    });
+                    map.addLayer(polyline);
+                    activeLayers[`${charId}-path`] = polyline;
+
+                    // Add start and end markers for path visualization
+                    const startPos = positions[0];
+                    if (startPos !== lastPos) {
+                        const startMarker = L.circleMarker([startPos.lat, startPos.lng], {
+                            radius: 4, color: character.color, fillOpacity: 0.5
+                        });
+                        map.addLayer(startMarker);
+                        activeLayers[`${charId}-start`] = startMarker;
+                    }
+                }
+
+                // Center map on Jesus if he's visible
+                if (character.id === 'jesus') {
+                    setTimeout(() => {
+                        map.setView([lastPos.lat, lastPos.lng], 14);
+                    }, 50);
+                }
+            }
+        }
+
+        // ============================================
+        // CHARACTER CHIP INITIALIZATION
+        // ============================================
+
+        function initCharacterChips() {
+            const container = document.getElementById('character-chips');
+            
+            characters.forEach(char => {
+                const chip = document.createElement('div');
+                chip.className = 'chip';
+                chip.dataset.id = char.id;
+                
+                chip.innerHTML = `<span style="color:${char.color}">●</span> ${char.name}`;
+                
+                chip.addEventListener('click', () => {
+                    chip.classList.toggle('active');
+                    
+                    // Ensure at least one character is selected
+                    if (document.querySelectorAll('.chip.active').length === 0) {
+                        document.querySelector('[data-id="jesus"]').classList.add('active');
+                    }
+                    
+                    updateMapForDay(currentDayIndex);
+                });
+
+                container.appendChild(chip);
+            });
+
+            // Activate Jesus + Mary Magdalene by default
+            document.querySelector('[data-id="jesus"]').classList.add('active');
+            document.querySelector('[data-id="mary_magdalene"]').classList.add('active');
+        }
+
+        // ============================================
+        // UI FUNCTIONS
+        // ============================================
+
+        function toggleContext() {
+            const content = document.getElementById('context-display');
+            const toggle = document.getElementById('context-toggle');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                toggle.textContent = '▼ Click to expand';
+            } else {
+                content.classList.add('show');
+                toggle.textContent = '▲ Click to collapse';
+            }
+        }
+
+        function showCharacters(charIds) {
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('active');
+                if (charIds.includes(chip.dataset.id)) {
+                    chip.classList.add('active');
+                }
+            });
+            updateMapForDay(currentDayIndex);
+        }
+
+        // Slider event listener
+        const slider = document.getElementById('timeline-slider');
+        slider.addEventListener('input', () => {
+            updateMapForDay(parseInt(slider.value));
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        initCharacterChips();
+        updateMapForDay(0);
+
         setTimeout(() => {
-          notification.style.opacity = '0';
-          setTimeout(() => notification.classList.remove('success', 'error'), 300);
-        }, 3000);
-      }
+            map.setView([31.78, 35.23], 14);
+        }, 300);
 
-      // Expose public methods - IMPORTANT: This makes game accessible to HTML buttons
-      return {
-        init,
-        showScreen,
-        startMission,
-        nextPhase,
-        openCodeBook,
-        solveMyself,
-        callContactForHelp,
-        addMorseSymbol,
-        clearCurrentLetter,
-        submitLetter,
-        saveGame,
-        startNewMission
-      };
-    }();
-
-    // Initialize game when page loads AND expose it globally for button calls
-    document.addEventListener('DOMContentLoaded', () => {
-      window.game = Game.init();  // FIXED: Now 'game' is accessible to onclick handlers!
-    });
-  </script>
+    </script>
 </body>
 </html>
